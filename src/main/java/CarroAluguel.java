@@ -1,10 +1,8 @@
-
 public class CarroAluguel {
     private float valorPorKm;
     private int distanciaPercorrida;
     private boolean disponivel = true;
     private boolean sinistro = false;
-    private float debito = 0;
 
     public CarroAluguel(float valorPorKm) {
         this.valorPorKm = valorPorKm;
@@ -37,9 +35,10 @@ public class CarroAluguel {
         if (this.disponivel) {
             throw new CarroDisponivelException("O carro está disponível.");
         }
-        if (this.debito > 0) {
+        if (getDebito() > 0) {
             throw new CarroNaoPagoException("O carro não foi pago.");
         }
+
         this.disponivel = true;
         this.sinistro = false;
         this.distanciaPercorrida = 0;
@@ -53,23 +52,23 @@ public class CarroAluguel {
         return this.sinistro;
     }
 
-    public boolean setSinistro(boolean sinistro) {
-        return this.sinistro = sinistro;
+    public void setSinistro(boolean sinistro) {
+        this.sinistro = sinistro;
     }
 
     public float getDebito() {
-        float totalDebito = this.valorPorKm * this.distanciaPercorrida;
+        float debito = this.valorPorKm * this.distanciaPercorrida;
         if (this.sinistro) {
-            totalDebito += totalDebito * 0.6f;
-            this.sinistro = false;
+            debito += debito * 0.6f;
         }
-        return totalDebito - debito;
+        return debito;
     }
 
     public void pagar() throws CarroDisponivelException {
         if (this.disponivel) {
             throw new CarroDisponivelException("O carro está disponível.");
         }
-        this.debito = 0;
+        this.distanciaPercorrida = 0;
+        this.sinistro = false;
     }
 }
